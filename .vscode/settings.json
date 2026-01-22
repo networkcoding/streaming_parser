@@ -1,4 +1,13 @@
 {
+    "files.associations": {
+        "*.json": "json",
+        "*.txt": "cmake",
+        "*.agent.md": "chatagent",
+        "*.instructions.md": "instructions",
+        "*.prompt.md": "prompt"
+    },
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
     "[cmake]": {
         "editor.defaultFormatter": "cheshirekow.cmake-format",
         "editor.formatOnSave": true
@@ -9,6 +18,10 @@
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.formatOnSave": true
+    },
+    "[markdown]": {
+        "files.trimTrailingWhitespace": false,
         "editor.formatOnSave": true
     },
     "C_Cpp.loggingLevel": "Warning",
@@ -27,10 +40,6 @@
     "C_Cpp.codeAnalysis.clangTidy.args": [
         "--config-file=${workspaceFolder}/.clang-tidy"
     ],
-    "files.associations": {
-        "*.json": "json",
-        "*.txt": "cmake"
-    },
     //@note:  install llvm-18
     "lldb-dap.executable-path": "/usr/bin/lldb-dap"
 }
