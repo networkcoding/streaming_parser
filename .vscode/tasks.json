@@ -1,0 +1,76 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build release",
+            "type": "shell",
+            "command": "cmake",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "args": [
+                "--build",
+                "build",
+                "-j 6"
+            ]
+        },
+        {
+            "label": "Build profile for coverage",
+            "type": "shell",
+            "command": "cmake",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "args": [
+                "--build",
+                "build_profile",
+                "-j 6"
+            ]
+        },
+        {
+            "label": "Coverage: run all ctests",
+            "type": "shell",
+            "dependsOn": [
+                "Build profile for coverage"
+            ],
+            "command": "ctest",
+            "options": {
+                "cwd": "${workspaceFolder}/build_profile"
+            },
+            "args": [
+                "-C",
+                "PROFILE",
+                "--output-on-failure",
+                "--gtest_break_on_failure"
+            ]
+        },
+        {
+            "label": "Coverage: generate reports",
+            "type": "shell",
+            "command": "gcovr",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "args": [
+                "-r",
+                ".",
+                "build_profile",
+                "--gcov-ignore-parse-errors",
+                "--exclude-throw-branches",
+                "--gcov-ignore-errors=all",
+                "--lcov",
+                "lcov.info"
+            ]
+        },
+        {
+            "label": "Generate Code Coverage Report",
+            "dependsOn": [
+                "Build profile for coverage",
+                "Coverage: run all ctests",
+                "Coverage: generate reports"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "streetsidesoftware.code-spell-checker",
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode-remote.remote-ssh",
+        "ms-vscode.cpptools-themes",
+        "ms-vscode.remote-explorer",
+        "ms-vscode.cmake-tools",
+        "ms-vscode.test-adapter-converter",
+        "cheshirekow.cmake-format",
+        "ryanluker.vscode-coverage-gutters"
+    ]
+}

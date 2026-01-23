@@ -12,6 +12,12 @@
         "editor.defaultFormatter": "cheshirekow.cmake-format",
         "editor.formatOnSave": true
     },
+    "cmake.coverageInfoFiles": [
+        "build_profile/lcov.info"
+    ],
+    "coverage-gutters.coverageFileNames": [
+        "build_profile/lcov.info"
+    ],
     "[cpp]": {
         "editor.defaultFormatter": "ms-vscode.cpptools",
         "editor.formatOnSave": true
