@@ -46,6 +46,13 @@
     "C_Cpp.codeAnalysis.clangTidy.args": [
         "--config-file=${workspaceFolder}/.clang-tidy"
     ],
+    "remote.portsAttributes": {
+        "6002": {
+            "label": "Next AI Draw.io",
+            "protocol": "http",
+            "onAutoForward": "openBrowser"
+        }
+    },
     //@note:  install llvm-18
     "lldb-dap.executable-path": "/usr/bin/lldb-dap"
 }

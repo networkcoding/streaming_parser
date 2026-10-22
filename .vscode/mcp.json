@@ -1,0 +1,19 @@
+{
+    "servers": {
+        "microsoft/playwright-mcp": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "@playwright/mcp@latest"
+            ]
+        },
+        "drawio": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "@next-ai-drawio/mcp-server@latest"
+            ]
+        }
+    },
+    "inputs": []
+}
