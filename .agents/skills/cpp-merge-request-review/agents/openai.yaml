@@ -1,0 +1,4 @@
+interface:
+  display_name: "C++ Merge Request Review"
+  short_description: "Review C++ merge requests for critical defects"
+  default_prompt: "Use $cpp-merge-request-review to review this merge request for actionable C++ defects."
