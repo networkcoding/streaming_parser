@@ -14,7 +14,7 @@ allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 # C++ Quality Tooling - Quick Reference
 
-> **Deep Knowledge**: Use `mcp__documentation__fetch_docs` with technology: `cpp-quality`.
+> **Deep Knowledge**: For details beyond this quick reference, consult available documentation with technology: `cpp-quality` (or official documentation for the relevant C++ tooling). No specific MCP tool is required.
 
 ## clang-format
 

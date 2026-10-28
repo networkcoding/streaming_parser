@@ -16,7 +16,7 @@ allowed-tools: Read, Grep, Glob
 
 # SOLID Principles
 
-> **Deep Knowledge**: Use `mcp__documentation__fetch_docs` with technology: `solid-principles` for comprehensive documentation.
+> **Deep Knowledge**: For details beyond this quick reference, consult available documentation with technology: `solid-principles` (or authoritative SOLID design references). No specific MCP tool is required.
 
 ## When NOT to Use This Skill
 
@@ -160,5 +160,4 @@ new UserService(new MockDatabase()); // For testing
 
 ## Reference Documentation
 - [Clean Code](../clean-code/SKILL.md)
-- [Design Patterns](../design-patterns/SKILL.md)
-- [Quality Principles (Consolidated)](../../quality/common/SKILL.md)
+- [Design Patterns](../gof-patterns/SKILL.md)
