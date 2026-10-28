@@ -1,0 +1,40 @@
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+
+set(CMAKE_SYSROOT "/opt/sysroots/bookworm")
+set(CMAKE_LIBRARY_ARCHITECTURE "x86_64-linux-gnu")
+
+if(NOT IS_DIRECTORY "${CMAKE_SYSROOT}")
+  message(FATAL_ERROR "Debian 12 sysroot not found: ${CMAKE_SYSROOT}")
+endif()
+if(NOT EXISTS "${CMAKE_SYSROOT}/usr/include/features.h")
+  message(FATAL_ERROR "Debian 12 sysroot is missing usr/include/features.h: ${CMAKE_SYSROOT}")
+endif()
+
+if(NOT EXISTS "/usr/bin/gcc-12" OR NOT EXISTS "/usr/bin/g++-12")
+  message(FATAL_ERROR "Host /usr/bin/gcc-12 and /usr/bin/g++-12 are required")
+endif()
+
+# Use the host compiler and binutils with the Debian 12 target headers and libraries.
+set(CMAKE_C_COMPILER /usr/bin/gcc-12)
+set(CMAKE_CXX_COMPILER /usr/bin/g++-12)
+set(CMAKE_AR /usr/bin/ar CACHE FILEPATH "Host archiver" FORCE)
+set(CMAKE_RANLIB /usr/bin/ranlib CACHE FILEPATH "Host ranlib" FORCE)
+set(CMAKE_NM /usr/bin/nm CACHE FILEPATH "Host nm" FORCE)
+set(CMAKE_LINKER /usr/bin/ld CACHE FILEPATH "Host linker" FORCE)
+
+if(EXISTS "/usr/bin/strip")
+  set(CMAKE_STRIP /usr/bin/strip CACHE FILEPATH "Host strip" FORCE)
+endif()
+if(EXISTS "/usr/bin/objcopy")
+  set(CMAKE_OBJCOPY /usr/bin/objcopy CACHE FILEPATH "Host objcopy" FORCE)
+endif()
+
+set(CMAKE_FIND_ROOT_PATH "${CMAKE_SYSROOT}")
+message(STATUS "Debian 12 sysroot: ${CMAKE_SYSROOT}")
+message(STATUS "Host C compiler: ${CMAKE_C_COMPILER}")
+message(STATUS "Host C++ compiler: ${CMAKE_CXX_COMPILER}")
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
