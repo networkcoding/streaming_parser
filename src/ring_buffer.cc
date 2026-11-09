@@ -52,7 +52,7 @@ std::error_code RingBuffer::write(const uint8_t* data, uint32_t length) {
     return ErrInvalidParameter;
   }
 
-  if (buffered_bytes() + length > capacity()) {
+  if (length > capacity() - buffered_bytes()) {
     return ErrBufferOverflow;
   }
 
