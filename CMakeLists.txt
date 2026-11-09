@@ -60,17 +60,21 @@ if(STREAMING_PARSER_BUILD_TESTS)
   gtest_discover_tests(streaming_parser_test)
 endif()
 
-option(STREAMING_PARSER_BUILD_FUZZER "Build the libFuzzer RingBuffer target" OFF)
+option(STREAMING_PARSER_BUILD_FUZZER "Build the libFuzzer targets" OFF)
 if(STREAMING_PARSER_BUILD_FUZZER)
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     message(FATAL_ERROR "STREAMING_PARSER_BUILD_FUZZER requires Clang")
   endif()
 
   add_executable(ring_buffer_fuzz src/ring_buffer_fuzz.cc src/ring_buffer.cc)
-  target_compile_options(ring_buffer_fuzz PRIVATE
-                         -fsanitize=fuzzer,address,undefined
-                         -fno-omit-frame-pointer)
-  target_link_options(ring_buffer_fuzz PRIVATE
-                      -fsanitize=fuzzer,address,undefined
-                      -fno-omit-frame-pointer)
+  add_executable(streaming_parser_fuzz src/streaming_parser_fuzz.cc
+                                       src/ring_buffer.cc)
+  foreach(fuzz_target ring_buffer_fuzz streaming_parser_fuzz)
+    target_compile_options(${fuzz_target} PRIVATE
+                           -fsanitize=fuzzer,address,undefined
+                           -fno-omit-frame-pointer)
+    target_link_options(${fuzz_target} PRIVATE
+                        -fsanitize=fuzzer,address,undefined
+                        -fno-omit-frame-pointer)
+  endforeach()
 endif()

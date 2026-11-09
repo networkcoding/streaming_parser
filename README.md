@@ -37,10 +37,10 @@ cmake --build build -j
 
 ## Fuzz RingBuffer with libFuzzer
 
-The optional `ring_buffer_fuzz` target uses LLVM libFuzzer with AddressSanitizer
-and UndefinedBehaviorSanitizer. It consumes arbitrary input as a sequence of
-RingBuffer operations and checks the buffer contents and state against a
-reference queue.
+The optional fuzz targets use LLVM libFuzzer with AddressSanitizer and
+UndefinedBehaviorSanitizer. The `ring_buffer_fuzz` harness consumes arbitrary
+input as a sequence of RingBuffer operations and checks the contents and state
+against a reference queue.
 
 ```bash
 CC=clang CXX=clang++ cmake -S . -B build-fuzz \
@@ -49,14 +49,26 @@ CC=clang CXX=clang++ cmake -S . -B build-fuzz \
   -DSTREAMING_PARSER_BUILD_FUZZER=ON
 cmake --build build-fuzz --target ring_buffer_fuzz -j
 mkdir -p build-fuzz/corpus
-./build-fuzz/ring_buffer_fuzz build-fuzz/corpus -max_len=4096
+cmake --build build-fuzz --target streaming_parser_fuzz -j
+mkdir -p build-fuzz/parser-corpus
+./build-fuzz/streaming_parser_fuzz build-fuzz/parser-corpus -max_len=4096
 ```
 
-libFuzzer saves inputs that expand coverage in the corpus directory and prints
+`streaming_parser_fuzz` is a stateful driver: a single input creates multiple
+frames, keeps one parser instance alive, and delivers the byte stream in
+arbitrary fragments. Its reference model tracks whether the parser expects a
+header or body, then checks callback order, header fields, and body bytes.
+Bulk-feed operations also exercise buffer-overflow rejection and retry without
+discarding the undelivered bytes. Comments in
+[`src/streaming_parser_fuzz.cc`](./src/streaming_parser_fuzz.cc) describe the
+driver and model.
+
+libFuzzer saves inputs that expand coverage in each corpus directory and prints
 the path to any crash reproducer. Replay a saved input with:
 
 ```bash
 ./build-fuzz/ring_buffer_fuzz build-fuzz/corpus/crash-<hash>
+./build-fuzz/streaming_parser_fuzz build-fuzz/parser-corpus/crash-<hash>
 ```
 
 The fuzzer target is disabled by default and requires a Clang compiler; the
