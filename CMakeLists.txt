@@ -32,27 +32,45 @@ else()
             FATAL: the compiler ${CMAKE_CXX_COMPILER} does not support c++17")
 endif()
 
-message(STATUS "Building googletest from source ${CMAKE_SOURCE_DIR}/googletest")
-include(FetchContent)
-FetchContent_Declare(googletest SOURCE SOURCE_DIR
-                                ${CMAKE_SOURCE_DIR}/googletest)
-FetchContent_MakeAvailable(googletest)
-include_directories(${googletest_SOURCE_DIR}/googletest/include)
+option(STREAMING_PARSER_BUILD_TESTS "Build GoogleTest unit tests" ON)
+if(STREAMING_PARSER_BUILD_TESTS)
+  message(STATUS "Building googletest from source ${CMAKE_SOURCE_DIR}/googletest")
+  include(FetchContent)
+  FetchContent_Declare(googletest SOURCE SOURCE_DIR
+                                  ${CMAKE_SOURCE_DIR}/googletest)
+  FetchContent_MakeAvailable(googletest)
+  include_directories(${googletest_SOURCE_DIR}/googletest/include)
 
-include(GoogleTest)
-enable_testing()
-add_custom_target(all_test ${CMAKE_CTEST_COMMAND} -V)
+  include(GoogleTest)
+  enable_testing()
+  add_custom_target(all_test ${CMAKE_CTEST_COMMAND} -V)
 
-set(CTEST_OUTPUT_ON_FAILURE true)
-set(GTEST_COLOR true)
+  set(CTEST_OUTPUT_ON_FAILURE true)
+  set(GTEST_COLOR true)
 
-# ring_buffer_test
-add_executable(ring_buffer_test src/ring_buffer_test.cc src/ring_buffer.cc)
-target_link_libraries(ring_buffer_test gtest_main)
-gtest_discover_tests(ring_buffer_test)
+  # ring_buffer_test
+  add_executable(ring_buffer_test src/ring_buffer_test.cc src/ring_buffer.cc)
+  target_link_libraries(ring_buffer_test gtest_main)
+  gtest_discover_tests(ring_buffer_test)
 
-# streaming_parser_test
-add_executable(streaming_parser_test src/streaming_parser_test.cc
-                                     src/ring_buffer.cc)
-target_link_libraries(streaming_parser_test gtest_main)
-gtest_discover_tests(streaming_parser_test)
+  # streaming_parser_test
+  add_executable(streaming_parser_test src/streaming_parser_test.cc
+                                       src/ring_buffer.cc)
+  target_link_libraries(streaming_parser_test gtest_main)
+  gtest_discover_tests(streaming_parser_test)
+endif()
+
+option(STREAMING_PARSER_BUILD_FUZZER "Build the libFuzzer RingBuffer target" OFF)
+if(STREAMING_PARSER_BUILD_FUZZER)
+  if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    message(FATAL_ERROR "STREAMING_PARSER_BUILD_FUZZER requires Clang")
+  endif()
+
+  add_executable(ring_buffer_fuzz src/ring_buffer_fuzz.cc src/ring_buffer.cc)
+  target_compile_options(ring_buffer_fuzz PRIVATE
+                         -fsanitize=fuzzer,address,undefined
+                         -fno-omit-frame-pointer)
+  target_link_options(ring_buffer_fuzz PRIVATE
+                      -fsanitize=fuzzer,address,undefined
+                      -fno-omit-frame-pointer)
+endif()

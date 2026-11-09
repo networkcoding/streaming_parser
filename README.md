@@ -35,6 +35,33 @@ cmake . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build -j
 ```
 
+## Fuzz RingBuffer with libFuzzer
+
+The optional `ring_buffer_fuzz` target uses LLVM libFuzzer with AddressSanitizer
+and UndefinedBehaviorSanitizer. It consumes arbitrary input as a sequence of
+RingBuffer operations and checks the buffer contents and state against a
+reference queue.
+
+```bash
+CC=clang CXX=clang++ cmake -S . -B build-fuzz \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DSTREAMING_PARSER_BUILD_TESTS=OFF \
+  -DSTREAMING_PARSER_BUILD_FUZZER=ON
+cmake --build build-fuzz --target ring_buffer_fuzz -j
+mkdir -p build-fuzz/corpus
+./build-fuzz/ring_buffer_fuzz build-fuzz/corpus -max_len=4096
+```
+
+libFuzzer saves inputs that expand coverage in the corpus directory and prints
+the path to any crash reproducer. Replay a saved input with:
+
+```bash
+./build-fuzz/ring_buffer_fuzz build-fuzz/corpus/crash-<hash>
+```
+
+The fuzzer target is disabled by default and requires a Clang compiler; the
+normal project build and test targets are unchanged.
+
 ## Improvement plan
 
 - Strengthen RingBuffer invariants: validate size at runtime (non-zero, power-of-two) even in
